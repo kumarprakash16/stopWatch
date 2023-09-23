@@ -1,24 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useEffect, useState } from "react";
+
+import Title from './title';
 
 function App() {
+  const [minute, setMinute] = useState(0);
+  const [second, setSecond] = useState(0);
+
+  const seconds = () => {
+    if (second < 59) setSecond(second + 1);
+    else {
+      setSecond(0);
+      setMinute(minute + 1);
+    }
+  };
+  let interval;
+  useEffect(() => {
+    interval = setInterval(seconds, 1000);
+
+    return () => clearInterval(interval);
+  });
+
+  const handleRestart = () => {
+    setMinute(0);
+    setSecond(0);
+  };
+
+  const handleStop = () => {
+    clearInterval(interval);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Title />
+      <div className="container">
+        <div className="timer">
+          {minute < 10 ? "0" + minute : minute}:
+          {second < 10 ? "0" + second : second}
+        </div>
+        <button className="btn" onClick={handleRestart}>
+          RESTART
+        </button>
+        <button className="btn" onClick={handleStop}>
+          STOP
+        </button>
+      </div>
+    </>
   );
 }
 
